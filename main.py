@@ -46,8 +46,13 @@ def encode_features(input_data, encoder):
     # Apply label encoding to each categorical feature
     for feature in categorical_features:
         if encoded_data[feature] != "":
-            encoded_value = encoder.transform([encoded_data[feature]])
-            encoded_data[feature] = encoded_value[0]
+            # Check if the value is in the encoder's classes
+            if encoded_data[feature] in encoder.classes_:
+                encoded_value = encoder.transform([encoded_data[feature]])
+                encoded_data[feature] = encoded_value[0]
+            else:
+                # Handle unseen labels (you can assign a default value or exclude them)
+                encoded_data[feature] = -1  # Example: using -1 for unseen labels
         else:
             # Handle missing or empty values as needed
             encoded_data[feature] = -1  # Example: using -1 for missing values
