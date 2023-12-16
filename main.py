@@ -76,15 +76,9 @@ y_test_orig = y_test_orig[X_test.index]
 # Load model
 best_lgbm_model = joblib.load('best_lgbm_model.pkl')
 
-# Define categorical columns
-categorical_columns = ['IM_INCIDENT_KEY', 'FIRE_BOX', 'STREET_HIGHWAY', 'ZIP_CODE', 'INCIDENT_TYPE_DESC', 'PROPERTY_USE_DESC', 'BOROUGH_DESC', 'FLOOR']
-
 # Initialize LabelEncoder
 encoder = LabelEncoder()
-
-# Replace categorical columns in the dataframe with encoded values
-for col in categorical_columns:
-    df[col] = encoder.fit_transform(df[col])
+encoder.classes_ = np.load('classes.npy', allow_pickle=True)
 
 def evauation_model(pred, y_val):
     score_MSE = round(mean_squared_error(pred, y_val), 2)
