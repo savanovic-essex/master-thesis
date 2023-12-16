@@ -1,7 +1,10 @@
+import pandas as pd
 import streamlit as st
 import numpy as np
 import joblib
 from sklearn.preprocessing import LabelEncoder
+
+df = pd.read_csv("incidents.csv")
 
 # Header for your app
 st.header("Incident Unit Prediction App")
@@ -16,23 +19,32 @@ best_lgbm_model = joblib.load('best_lgbm_model.pkl')
 
 st.subheader("Please enter the incident details for prediction")
 
-# Create user input fields
+
+# Function to create a select box with searchable options
+def create_selectbox(label, options):
+    return st.selectbox(label, options, format_func=lambda x: x if x != "" else "None")
+
+
+# Create searchable input fields
+input_FIRE_BOX = create_selectbox("Fire Box", df['FIRE_BOX'].unique())
+input_STREET_HIGHWAY = create_selectbox("Street/Highway", df['STREET_HIGHWAY'].unique())
+input_ZIP_CODE = create_selectbox("Zip Code", df['ZIP_CODE'].unique())
+input_INCIDENT_TYPE_DESC = create_selectbox("Incident Type Description", df['INCIDENT_TYPE_DESC'].unique())
+input_PROPERTY_USE_DESC = create_selectbox("Property Use Description", df['PROPERTY_USE_DESC'].unique())
+input_BOROUGH_DESC = create_selectbox("Borough Description", df['BOROUGH_DESC'].unique())
+input_INCIDENT_DAY_OF_WEEK = create_selectbox("Incident Day of Week", df['INCIDENT_DAY_OF_WEEK'].unique())
+input_INCIDENT_HOUR = create_selectbox("Incident Hour", df['INCIDENT_HOUR'].unique())
+input_INCIDENT_MONTH = create_selectbox("Incident Month", df['INCIDENT_MONTH'].unique())
+input_YEAR = create_selectbox("Year", df['YEAR'].unique())
+
+# Other input fields
 input_IM_INCIDENT_KEY = st.text_input("IM Incident Key")
-input_FIRE_BOX = st.text_input("Fire Box")
-input_INCIDENT_TYPE_DESC = st.text_input("Incident Type Description")
-input_PROPERTY_USE_DESC = st.text_input("Property Use Description")
-input_STREET_HIGHWAY = st.text_input("Street/Highway")
-input_ZIP_CODE = st.text_input("Zip Code")
-input_BOROUGH_DESC = st.text_input("Borough Description")
 input_FLOOR = st.text_input("Floor")
-input_INCIDENT_MONTH = st.number_input("Incident Month", min_value=1, max_value=12, step=1)
-input_INCIDENT_DAY_OF_WEEK = st.number_input("Incident Day of the Week", min_value=1, max_value=7, step=1)
-input_INCIDENT_HOUR = st.number_input("Incident Hour", min_value=0, max_value=23, step=1)
 input_RESPONSE_TIME = st.number_input("Response Time", min_value=0)
-input_RESPONSE_TIME_MINUTES = st.number_input("Response Time (Minutes)", min_value=0.0, step=0.1)
-input_YEAR = st.number_input("Year", min_value=2000, max_value=2023, step=1)
+input_RESPONSE_TIME_MINUTES = input_RESPONSE_TIME / 60
 input_LATITUDE = st.number_input("Latitude", format="%.8f")
 input_LONGITUDE = st.number_input("Longitude", format="%.8f")
+
 
 # Assume you have a function to encode categorical features
 def encode_features(input_data, encoder):
