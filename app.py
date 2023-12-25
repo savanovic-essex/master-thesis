@@ -36,9 +36,13 @@ def encode_features(input_data, encoder):
     return encoded_data  # Return the encoded data.
 
 # Load the LightGBM model from the serialized file.
+model_file_path = 'best_lgbm_model.pkl'
+with open(model_file_path, 'rb') as file:  # Open the file in read-binary mode.
+    lgbm_model_with_outliers = pickle.load(file)  # Load the trained model.
+
 model_file_path = 'best_lgbm_model_no_outliers.pkl'
 with open(model_file_path, 'rb') as file:  # Open the file in read-binary mode.
-    lgbm_model = pickle.load(file)  # Load the trained model.
+    lgbm_model_no_outliers = pickle.load(file)  # Load the trained model.
 
 # Define a route for the root URL which returns a simple string.
 @app.route('/')
@@ -48,14 +52,25 @@ def home():
 # Define the route for making predictions using a POST request.
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json(force=True)  # Get JSON data from the POST request.
+    data = request.get_json(force=True)
+
     try:
-        encoded_inputs = encode_features(data, encoder)  # Encode the input features.
-        features = np.array([list(encoded_inputs.values())])  # Convert the dictionary to a numpy array.
-        prediction = lgbm_model.predict(features)  # Make a prediction using the LightGBM model.
-        return jsonify(prediction.tolist())  # Return the prediction as a JSON response.
+        # Check which model to use based on 'model_type' parameter
+        model_type = data.get('model_type')
+        if model_type == 'model_1':
+            model = lgbm_model_with_outliers
+        elif model_type == 'model_2':
+            model = lgbm_model_no_outliers
+        else:
+            return jsonify({"error": "Invalid model type"}), 400
+
+        # Encode features and make prediction
+        encoded_inputs = encode_features(data, encoder)
+        features = np.array([list(encoded_inputs.values())])
+        prediction = model.predict(features)
+        return jsonify(prediction.tolist())
+
     except Exception as e:
-        # If an error occurs, return the error message as a JSON response with status code 400.
         return jsonify({"error": str(e)}), 400
 
 # If this script is run directly, start the Flask web server.
