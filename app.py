@@ -69,7 +69,7 @@ def predict():
             return jsonify({"error": "Invalid model type"}), 400
 
         # Encode features and make prediction
-        encoded_inputs = encode_features(data, encoder)
+        encoded_inputs = encode_features(data)
         features = np.array([list(encoded_inputs.values())])
         prediction = model.predict(features)
         return jsonify(prediction.tolist())
