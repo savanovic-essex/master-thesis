@@ -33,7 +33,7 @@ def encode_features(input_data, encoder):
 
 
 # Load the LightGBM model from the serialized file.
-model_file_path = 'best_lgbm_model1.pkl'
+model_file_path = 'lgbm_model.pkl'
 with open(model_file_path, 'rb') as file:  # Open the file in read-binary mode.
     lgbm_model = pickle.load(file)  # Load the trained model.
 
