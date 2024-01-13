@@ -13,6 +13,7 @@ CORS(app)  # Enable CORS for the Flask app. This makes the API accessible to web
 encoder = LabelEncoder()
 encoder.classes_ = np.load('classes.npy', allow_pickle=True)  # Load the classes used by the LabelEncoder.
 
+
 def encode_features(input_data, encoder):
     categorical_features = [
         'IM_INCIDENT_KEY', 'FIRE_BOX', 'STREET_HIGHWAY', 'ZIP_CODE',
@@ -37,9 +38,11 @@ model_file_path = 'lgbm_model.pkl'
 with open(model_file_path, 'rb') as file:  # Open the file in read-binary mode.
     lgbm_model = pickle.load(file)  # Load the trained model.
 
+
 @app.route('/')
 def home():
     return "LightGBM Model API"
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -54,6 +57,7 @@ def predict():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)
