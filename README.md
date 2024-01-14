@@ -5,10 +5,36 @@ This repository hosts the backend for my Master's thesis project, titled "Optimi
 It features a machine learning model that predicts the required number of firefighter units needed on the scene.
 The application exposes an API endpoint which accepts specific arguments and feeds them into the ML model to return the predicted amount of units needed on the scene.
 
+## Folder & File Structure
+   ```
+   .
+├── Merged_Coordidnates_Incidents_Responded_to_by_Fire_Companies.csv
+├── Procfile
+├── README.md
+├── app.py
+├── classes.npy
+├── lgbm_model.pkl
+├── master_thesis.ipynb
+└── requirements.txt
+   ```
+
+## Technology Stack
+- Flask: A lightweight WSGI web application framework used to create the API.
+- LightGBM: A gradient boosting framework for machine learning to build the predictive model.
+- Pickle: For loading the serialized Python object (the ML model).
+- NumPy: Utilized for array operations and data handling.
+- Flask-CORS: Handles Cross-Origin Resource Sharing (CORS), allowing the API to be accessible from web applications.
+- Gunicorn: Serves as the HTTP server for the Flask application.
+- Jupyter Notebook: Used for exploratory data analysis, model training, and testing.
+
 ## Installation
 To set up this project locally:
 
 1. Clone the repository to your local machine.
+   ```
+   git clone https://github.com/savanovic-essex/master-thesis-backend.git
+   ```
+
 2. Install the required dependencies:
    ```
    pip3 install -r requirements.txt
